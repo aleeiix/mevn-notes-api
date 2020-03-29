@@ -10,14 +10,8 @@ import express from "express";
 const app = express();
 
 // DB Connection
-const dbUser = "mevnuser";
-const dbPassword = "NhFjFTFfvy42dQK";
-const dbUri = `mongodb+srv://${dbUser}:${dbPassword}@mevn-youtube-udemy-fujyo.mongodb.net/test?retryWrites=true&w=majority`;
-const dbOptions = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true
-};
+import { dbUri, dbOptions } from "./properties";
+
 mongoose
   .connect(dbUri, dbOptions)
   .then(() => {
