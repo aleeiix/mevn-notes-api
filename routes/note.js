@@ -53,7 +53,7 @@ router.delete(`${ENTRYPOINT}/:id`, async (req, res) => {
   try {
     const noteDB = await Note.findByIdAndDelete({ _id: id });
 
-    if (!noteDb) {
+    if (!noteDB) {
       return res.status(400).json({
         message: "That note does not exist",
         error
