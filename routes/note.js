@@ -6,12 +6,10 @@ const ENTRYPOINT = "/note";
 
 router.get(`${ENTRYPOINT}`, async (req, res) => {
   try {
-    console.log("ENTRY");
-    // const notesDB = await Note.find();
+    const notesDB = await Note.find();
 
-    res.json([{ name: "hola", description: "adios" }]);
+    res.json(notesDB);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: "Internal error",
       error
