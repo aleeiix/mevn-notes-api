@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import underscore from "underscore";
 import User from "../models/user";
 
 const router = express.Router();
@@ -76,9 +77,18 @@ router.post(`${ENTRYPOINT}`, async (req, res) => {
 
 router.put(`${ENTRYPOINT}/:id`, async (req, res) => {
   const id = req.params.id;
-  const body = req.body;
+  const body = underscore.pick(req.body, [
+    "name",
+    "email",
+    "password",
+    "active",
+  ]);
 
   try {
+    if (body.password) {
+      body.password = bcrypt.hashSync(body.password, saltRounds);
+    }
+
     const userDB = await User.findByIdAndUpdate({ _id: id }, body, {
       new: true,
       runValidators: true,

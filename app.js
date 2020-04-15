@@ -34,6 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 const ENTRYPOINT = "/api";
 app.use(ENTRYPOINT, require("./routes/note"));
 app.use(ENTRYPOINT, require("./routes/user"));
+app.use(ENTRYPOINT, require("./routes/login"));
 
 // Middleware for vue.js
 app.use(history());
