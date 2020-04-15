@@ -1,18 +1,21 @@
 import express from "express";
+import { verficationAuth, verficationAdmin } from "./../middlewares/auth";
+
 import Note from "./../models/note";
 
 const router = express.Router();
 const ENTRYPOINT = "/note";
 
-router.get(`${ENTRYPOINT}`, async (req, res) => {
+router.get(`${ENTRYPOINT}`, verficationAuth, async (req, res) => {
+  const userId = req.user._id;
   try {
-    const notesDB = await Note.find();
+    const notesDB = await Note.find({ userId });
 
     res.json(notesDB);
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
-      error
+      error,
     });
   }
 });
@@ -27,13 +30,15 @@ router.get(`${ENTRYPOINT}/:id`, async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
-      error
+      error,
     });
   }
 });
 
-router.post(`${ENTRYPOINT}`, async (req, res) => {
+router.post(`${ENTRYPOINT}`, verficationAuth, async (req, res) => {
   const body = req.body;
+
+  body.userId = req.user._id;
 
   try {
     const noteDB = await Note.create(body);
@@ -42,7 +47,7 @@ router.post(`${ENTRYPOINT}`, async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
-      error
+      error,
     });
   }
 });
@@ -56,7 +61,7 @@ router.delete(`${ENTRYPOINT}/:id`, async (req, res) => {
     if (!noteDB) {
       return res.status(400).json({
         message: "That note does not exist",
-        error
+        error,
       });
     }
 
@@ -64,7 +69,7 @@ router.delete(`${ENTRYPOINT}/:id`, async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
-      error
+      error,
     });
   }
 });
@@ -75,14 +80,14 @@ router.put(`${ENTRYPOINT}/:id`, async (req, res) => {
 
   try {
     const noteDB = await Note.findByIdAndUpdate({ _id: id }, body, {
-      new: true
+      new: true,
     });
 
     res.json(noteDB);
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
-      error
+      error,
     });
   }
 });
