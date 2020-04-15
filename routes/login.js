@@ -1,12 +1,13 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import User from "../models/user";
 
 const router = express.Router();
 
 const ENTRYPOINT = "/login";
-const saltRounds = 10;
+const secret = "mevn_note_2020";
 
 router.post(`${ENTRYPOINT}`, async (req, res) => {
   const body = req.body;
@@ -25,7 +26,11 @@ router.post(`${ENTRYPOINT}`, async (req, res) => {
       });
     }
 
-    res.json({ user: userDB, token: "token" });
+    const token = jwt.sign({ data: userDB }, secret, {
+      expiresIn: 60 * 60 * 24,
+    });
+
+    res.json({ user: userDB, token });
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
