@@ -17,7 +17,7 @@ mongoose
   .then(() => {
     console.log("Connection to the database successfully");
   })
-  .catch(err => {
+  .catch((err) => {
     err;
   });
 
@@ -31,7 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 // app.get("/", function(req, res) {
 //   res.send("Hello World!");
 // });
-app.use("/api", require("./routes/note"));
+const ENTRYPOINT = "/api";
+app.use(ENTRYPOINT, require("./routes/note"));
+app.use(ENTRYPOINT, require("./routes/user"));
 
 // Middleware for vue.js
 app.use(history());
@@ -39,6 +41,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Listener
 app.set("port", process.env.PORT || 3000);
-app.listen(app.get("port"), function() {
+app.listen(app.get("port"), function () {
   console.log(`App listening on port ${app.get("port")}`);
 });
