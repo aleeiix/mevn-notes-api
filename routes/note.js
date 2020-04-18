@@ -8,10 +8,16 @@ const ENTRYPOINT = "/note";
 
 router.get(`${ENTRYPOINT}`, verficationAuth, async (req, res) => {
   const userId = req.user._id;
-  try {
-    const notesDB = await Note.find({ userId });
 
-    res.json(notesDB);
+  const limit = Number(req.query.limit) || 5;
+  const skip = Number(req.query.skip) || 0;
+
+  try {
+    const notesDB = await Note.find({ userId }).limit(limit).skip(skip);
+
+    const total = await Note.find({ userId }).countDocuments();
+
+    res.json({ data: notesDB, total });
   } catch (error) {
     return res.status(400).json({
       message: "Internal error",
